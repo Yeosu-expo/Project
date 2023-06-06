@@ -16,8 +16,12 @@ int howManyLine(FILE* fp){
                 return cnt;
 }
 
+void fillZeroData(int data[]){
+        for(int i=0;i<16;i++) data[i]=0;
+}
+
 int howManyFriends(FILE* fp) {
-                int cnt = 1;
+                int cnt = -1;
                 char txt;
                 char line[256];
 
@@ -30,9 +34,8 @@ int howManyFriends(FILE* fp) {
                 do {
                                 fscanf(fp, " %[^\n]s", line);
                 } while (strcmp(line, "*FRIENDS LIST*")!=0);
-                //printf("howMany:%s\n", line);
                 //fscanf(fp, " %[^\n]s", line);
-                return cnt / 5;
+                return cnt / 4;
 }
 
 void mk_haming(char ch, char haming[]) {
@@ -54,7 +57,7 @@ void mk_haming(char ch, char haming[]) {
                 }
 }
 //해밍코드를 가져와서 16*12배열에 저장
-void mk_arr_1612(char test[], char storage[][12]){
+void mk_arr_1612(int test[], char storage[][12]){
                 char haming[12];
                 for(int i = 0; i < 16; i++){
                                 mk_haming(test[i], haming);
@@ -128,7 +131,7 @@ void fillZero(){
                                                 block[i][j]='0';
 }
 
-int status(FILE* fp){
+int status(FILE* fp, int data[16]){
                 char line[256];
 
                 int cnt2=7;
@@ -145,6 +148,7 @@ int status(FILE* fp){
                                                                 //print_haming(block);
                                                                 binary_to_short(block);
                                                                 fillZero();
+                                                                fillZeroData(data);
                                                                 charcnt=0;
                                                 }
                                                 if(i==size) continue;
@@ -155,20 +159,21 @@ int status(FILE* fp){
                 return charcnt;
 }
 
-int item(FILE* fp){
+int item(FILE* fp, int data[16]){
                 char line[256];
+                for(int i=0;i<256;i++) line[i]=0;
                 char str[256];
                 fscanf(fp, " %[^\n]s", str); cnt--;
                 while(strstr(str,":")!=NULL) {
-                                char* item = strtok(str, ": ");
+                                char* item = strtok(str, " ");
                                 char* get = strtok(NULL, "\n");
 
-                                if (strcmp(item, "BOMB") == 0) strcat(line, "A");
-                                if (strcmp(item, "POTION") == 0) strcat(line, "B");
-                                if (strcmp(item, "CURE") == 0) strcat(line, "C");
-                                if (strcmp(item, "BOOK") == 0) strcat(line, "D");
-                                if (strcmp(item, "SHIELD") == 0) strcat(line, "E");
-                                if (strcmp(item, "CANNON") == 0) strcat(line, "F");
+                                if (strcmp(item, "BOMB:") == 0) strcat(line, "A");
+                                if (strcmp(item, "POTION:") == 0) strcat(line, "B");
+                                if (strcmp(item, "CURE:") == 0) strcat(line, "C");
+                                if (strcmp(item, "BOOK:") == 0) strcat(line, "D");
+                                if (strcmp(item, "SHIELD:") == 0) strcat(line, "E");
+                                if (strcmp(item, "CANNON:") == 0) strcat(line, "F");
                                 strcat(line, get);
                                 fscanf(fp, " %[^\n]s", str); cnt--;
                 }
@@ -191,19 +196,22 @@ int item(FILE* fp){
                 return charcnt;
 }
 
-int friends(FILE* fp){
+int friends(FILE* fp, int data[16]){
                 char line[256];
 
                 int cnt2=4;
                 while(cnt2--){
-                                char what[10];
                                 fscanf(fp, " %[^\n]s", line);
-                                strtok(line, ":");
-                                strcpy(line,strtok(NULL, "\n"));
+
+                                if(strcmp(line,"*DESCRIPTION*")!=0){
+                                        strtok(line, ":");
+
+                                        strcpy(line,strtok(NULL, ""));
+                                }
                                 strcat(line, "/");
 
                                 int size=strlen(line);
-                                for(int i=0;i<=size;i++){
+                                for(int i=1;i<=size;i++){
                                                 if(charcnt==16){
                                                                 mk_arr_1612(data, block);
                                                                 binary_to_short(block);
@@ -218,7 +226,7 @@ int friends(FILE* fp){
                 return charcnt;
 }
 
-int desc(FILE *fp)
+int desc(FILE *fp,int data[16])
 {
                 char *lines[1000];
                 char *comp[1000];
@@ -228,8 +236,6 @@ int desc(FILE *fp)
                 int count = 0;
                 int flag = 0;
                 int numEmptyLines = 0;
-
-                char arr[16];
 
                 while (1)
                 {
@@ -288,14 +294,22 @@ int desc(FILE *fp)
                                 {
                                                 if (charcnt == 16)
                                                 {
-                                                                mk_arr_1612(arr, block);
+                                                                mk_arr_1612(data, block);
                                                                 binary_to_short(block);
                                                                 fillZero();
+                                                                fillZeroData(data);
                                                                 charcnt = 0;
                                                 }
                                                 if(j==strlen(comp[i])) continue;
-                                                arr[charcnt++] = comp[i][j];
+                                                data[charcnt++] = comp[i][j];
                                 }
+                }
+
+                if(charcnt!=0){
+                        mk_arr_1612(data,block);
+                        binary_to_short(block);
+                        fillZero();
+                        charcnt=0;
                 }
                 return charcnt;
 }
@@ -305,6 +319,7 @@ int main(int argc, char* argv[]){
                 encodedFilename=argv[2];
                 FILE* fp = fopen(filename,"rt");
 
+                int data[16];
                 fillZero();
                 cnt=howManyLine(fp);
                 int inP=0;
@@ -315,25 +330,25 @@ int main(int argc, char* argv[]){
                                 //printf("line:%s, cnt:%d\n", line, cnt);
 
                                 if(strcmp(line, "*USER STATUS*")==0){
-                                                charcnt=status(fp);// data몇번째까지 썼는지 반환
+                                                status(fp, data);// data몇번째까지 썼는지 반환
                                                 cnt-=7;// status함수에서 7줄 처리를 해서 그 만큼 감소 시킴
                                 }
-                                else if(strcmp(line, "*ITEMS*")==0) charcnt=item(fp);
+                                else if(strcmp(line, "*ITEMS*")==0) charcnt=item(fp, data);
                                 else if (strcmp(line, "*FRIENDS LIST*")==0){
-                                                //printf("!\n");
                                                 int friend_cnt = howManyFriends(fp);
                                                 for (int i = 0; i < friend_cnt; i++) {
-                                                                charcnt = friends(fp);
+                                                                charcnt = friends(fp, data);
                                                                 cnt -= 5;
                                                 }
                                                 int size=strlen("*DESCRIPTION*");
                                                 fseek(fp, -size, SEEK_CUR);
                                 }
-                                else if(strcmp(line, "*DESCRIPTION*")==0){
-                                                charcnt=desc(fp);
+                                if(strcmp(line, "*DESCRIPTION*")==0){
+                                                charcnt=desc(fp, data);
                                                 break;
                                 }
                 }
+                fclose(fp);
 
                 return 0;
 }
