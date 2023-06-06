@@ -136,12 +136,12 @@ int status(FILE* fp, int data[16]){
 
                 int cnt2=7;
                 while(cnt2--){
-                                char what[10];
-                                fscanf(fp, " %s", what);
                                 fscanf(fp, " %[^\n]s", line);
-                                strcat(line, "/");
-                                //printf("%s\n",line);
-                                int size=strlen(line);
+                                strtok(line,":");
+                                char* value=strtok(NULL,":");
+                                strcat(value, "/");
+                                //printf("%s\n",value);
+                                int size=strlen(value);
                                 for(int i=0;i<=size;i++){
                                                 if(charcnt==16){
                                                                 mk_arr_1612(data, block);
@@ -152,48 +152,48 @@ int status(FILE* fp, int data[16]){
                                                                 charcnt=0;
                                                 }
                                                 if(i==size) continue;
-                                                data[charcnt++]=line[i];
+                                                if(value[i]!=' ')
+                                                        data[charcnt++]=value[i];
                                 }
                 }
 
                 return charcnt;
 }
-
 int item(FILE* fp, int data[16]){
-                char line[256];
-                for(int i=0;i<256;i++) line[i]=0;
-                char str[256];
-                fscanf(fp, " %[^\n]s", str); cnt--;
-                while(strstr(str,":")!=NULL) {
-                                char* item = strtok(str, " ");
-                                char* get = strtok(NULL, "\n");
+    char line[256];
+    for(int i=0;i<256;i++) line[i]=0;
+    char str[256];
+    fscanf(fp, " %[^\n]s", str); cnt--;
+    while(strstr(str,":")!=NULL) {
+        char* item = strtok(str, " ");
+        char* get = strtok(NULL, "\n");
 
-                                if (strcmp(item, "BOMB:") == 0) strcat(line, "A");
-                                if (strcmp(item, "POTION:") == 0) strcat(line, "B");
-                                if (strcmp(item, "CURE:") == 0) strcat(line, "C");
-                                if (strcmp(item, "BOOK:") == 0) strcat(line, "D");
-                                if (strcmp(item, "SHIELD:") == 0) strcat(line, "E");
-                                if (strcmp(item, "CANNON:") == 0) strcat(line, "F");
-                                strcat(line, get);
-                                fscanf(fp, " %[^\n]s", str); cnt--;
-                }
-                strcat(line,"/");
-                int size = strlen(line);
-                for(int i = 0 ; i <= size ; i++){
-                                if(charcnt == 16){
-                                                //printf("%ld\n", strlen(line));
-                                                mk_arr_1612(data, block);
-                                                binary_to_short(block);
-                                                fillZero();
-                                                charcnt = 0;
-                                }
-                                if(i == size) continue;
-                                data[charcnt++]=line[i];
-                }
-                //printf("itemline:%s\n", str);
-                size=strlen(str)+1;
-                fseek(fp, -size, SEEK_CUR);
-                return charcnt;
+        strcat(line, get);
+        if (strcmp(item, "BOMB:") == 0) strcat(line, "A");
+        if (strcmp(item, "POTION:") == 0) strcat(line, "B");
+        if (strcmp(item, "CURE:") == 0) strcat(line, "C");
+        if (strcmp(item, "BOOK:") == 0) strcat(line, "D");
+        if (strcmp(item, "SHIELD:") == 0) strcat(line, "E");
+        if (strcmp(item, "CANNON:") == 0) strcat(line, "F");
+        fscanf(fp, " %[^\n]s", str); cnt--;
+    }
+    strcat(line,"/");
+    int size = strlen(line);
+    for(int i = 0 ; i <= size ; i++){
+        if(charcnt == 16){
+            //printf("%ld\n", strlen(line));
+            mk_arr_1612(data, block);
+            binary_to_short(block);
+            fillZero();
+            charcnt = 0;
+        }
+        if(i == size) continue;
+        data[charcnt++]=line[i];
+    }
+    //printf("itemline:%s\n", str);
+    size=strlen(str)+1;
+    fseek(fp, -size, SEEK_CUR);
+    return charcnt;
 }
 
 int friends(FILE* fp, int data[16]){
@@ -206,7 +206,7 @@ int friends(FILE* fp, int data[16]){
                                 if(strcmp(line,"*DESCRIPTION*")!=0){
                                         strtok(line, ":");
 
-                                        strcpy(line,strtok(NULL, ""));
+                                        strcpy(line,strtok(NULL, ":"));
                                 }
                                 strcat(line, "/");
 
@@ -287,7 +287,7 @@ int desc(FILE *fp,int data[16])
                 comp[compCnt] = (char *)malloc(sizeof(char) * 2);
                 strcpy(comp[compCnt], "~");
 
-
+                data[charcnt++]='`';
                 for (int i = 0; i <= compCnt; ++i)
                 {
                                 for (int j = 0; j <= strlen(comp[i]); ++j)
@@ -340,7 +340,7 @@ int main(int argc, char* argv[]){
                                                                 charcnt = friends(fp, data);
                                                                 cnt -= 5;
                                                 }
-                                                int size=strlen("*DESCRIPTION*");
+                                          int size=strlen("*DESCRIPTION*");
                                                 fseek(fp, -size, SEEK_CUR);
                                 }
                                 if(strcmp(line, "*DESCRIPTION*")==0){

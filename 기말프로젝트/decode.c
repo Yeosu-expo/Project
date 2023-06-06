@@ -41,8 +41,8 @@ char output_origin(unsigned short result) {
                                 else if (haming[12-check] == 1) haming[12-check] = 0;
                 }
                 /*       printf("check befor\n");
-                                                 for(i = 0; i < 12; i++)
-                                                 printf("%d ", haming[i]);
+                                                for(i = 0; i < 12; i++)
+                                                printf("%d ", haming[i]);
                                                  printf("\n");  */
                 for (i = 0; i < 12; i++) {
                                 if (i == 11 || i == 10 || i == 8 || i == 4)
@@ -54,8 +54,8 @@ char output_origin(unsigned short result) {
                 }
 
                 /* for(i = 0; i < 8; i++)
-                         printf("%d ", bin[i]);
-                         printf("\n");*/
+                        printf("%d ", bin[i]);
+                        printf("\n");*/
 
                 for (i = 0; i < 8; i++)
                                 output += bin[i] * pow2(7 - i);
