@@ -128,89 +128,96 @@ void readAll(FileData* fd){
                                                                 if(USS<=7){
                                                                                 USS++;
                                                                                 switch(USS){
-                                                                                                case 1 :
-                                                                                                                printf("ID: %s\n", str);
-                                                                                                                break;
-                                                                                                case 2:
-                                                                                                                printf("NAME: %s\n", str);
-                                                                                                                break;
-                                                                                                case 3:
-                                                                                                                printf("GENDER: %s\n", str);
-                                                                                                                break;
-                                                                                                case 4:
-                                                                                                                printf("AGE: %s\n", str);
-                                                                                                                break;
-                                                                                                case 5:
-                                                                                                                printf("HP: %s\n", str);
-                                                                                                                break;
-                                                                                                case 6:
-                                                                                                                printf("MP: %s\n", str);
-                                                                                                                break;
-                                                                                                case 7:
-                                                                                                                printf("COIN: %s\n", str);
-                                                                                                                break;
+                                                                                               case 1 :
+                                                                                               printf("ID: %s\n", str);
+                                                                                               break;
+                                                                                               case 2:
+                                                                                               printf("NAME: %s\n", str);
+                                                                                               break;
+                                                                                               case 3:
+                                                                                               printf("GENDER: %s\n", str);
+                                                                                               break;
+                                                                                               case 4:
+                                                                                               printf("AGE: %s\n", str);
+                                                                                               break;
+                                                                                               case 5:
+                                                                                               printf("HP: %s\n", str);
+                                                                                               break;
+                                                                                               case 6:
+                                                                                               printf("MP: %s\n", str);
+                                                                                               break;
+                                                                                               case 7:
+                                                                                               printf("COIN: %s\n", str);
+                                                                                               break;
                                                                                 }
                                                                                 clearStr(str);
+                                                                                index=0;
                                                                 }
                                                                 else if(USS==8&&ITS==0){
                                                                                 printf("*ITEMS*\n");
                                                                                 ITS++;
                                                                                 int size=strlen(str);
                                                                                 for(int i=0;i<size;i++){
-                                                                                                char num[4]; int numCnt=0;
-                                                                                                if(str[i]>='0'&&str[i]<='9'){
-                                                                                                                num[numCnt++]=str[i];
-                                                                                                                continue;
-                                                                                                }
-                                                                                                else{
-                                                                                                                switch(str[i]){
-                                                                                                                                case 'A':
-                                                                                                                                  printf("BOMB: %s\n", num);
-                                                                                                                                  break;
-                                                                                                                                case 'B':
-                                                                                                                                  printf("POTION: %s\n", num);
-                                                                                                                                  break;
-                                                                                                                                case 'C':
-                                                                                                                                  printf("CURE: %s\n", num);
-                                                                                                                                  break;
-                                                                                                                                case 'D':
-                                                                                                                                  printf("BOOK: %s\n", num);
-                                                                                                                                  break;
-                                                                                                                                case 'E':
-                                                                                                                                  printf("SHIELD: %s\n", num);
-                                                                                                                                  break;
-                                                                                                                                case 'F':
-                                                                                                                                  printf("CANNON: %s\n", num);
-                                                                                                                                  break;
-                                                                                                                }
-                                                                                                                clearStr(num);
-                                                                                                }
+                                                                                               char num[4]; int numCnt=0;
+                                                                                               if(str[i]>='0'&&str[i]<='9'){
+                                                                                               num[numCnt++]=str[i];
+                                                                                               continue;
+                                                                                               }
+                                                                                               else{
+                                                                                               switch(str[i]){
+                                                                                               case 'A':
+                                                                                               printf("BOMB: %s\n", num);
+                                                                                               break;
+                                                                                               case 'B':
+                                                                                               printf("POTION: %s\n", num);
+                                                                                               break;
+                                                                                               case 'C':
+                                                                                               printf("CURE: %s\n", num);
+                                                                                               break;
+                                                                                               case 'D':
+                                                                                               printf("BOOK: %s\n", num);
+                                                                                               break;
+                                                                                               case 'E':
+                                                                                               printf("SHIELD: %s\n", num);
+                                                                                               break;
+                                                                                               case 'F':
+                                                                                               printf("CANNON: %s\n", num);
+                                                                                               break;
+                                                                                               }
+                                                                                               clearStr(num);
+                                                                                               }
                                                                                 }
                                                                                 clearStr(str);
+                                                                                index=0;
                                                                 }
-                                                                else if(str=="`") FRS=5;
+                                                                else if(strcmp(str,"`")==0){
+                                                                        FRS=5;
+                                                                        clearStr(str);
+                                                                        index=0;
+                                                                }
                                                                 else if(ITS==1&&FRS<=4){
-                                                                                FRS++; fCnt++;
+                                                                                FRS++;
                                                                                 if(RealFirst){
-                                                                                                printf("*FRIENDS LIST*\n");
-                                                                                                RealFirst=0;
+                                                                                               printf("*FRIENDS LIST*\n");
+                                                                                               RealFirst=0;
                                                                                 }
                                                                                 switch(FRS){
-                                                                                                case 1:
-                                                                                                                printf("FRIENDS%d ID: %s\n", fCnt, str);
-                                                                                                                break;
-                                                                                                case 2:
-                                                                                                                printf("FRIENDS%d NAME: %s\n", fCnt, str);
-                                                                                                                break;
-                                                                                                case 3:
-                                                                                                                printf("FRIENDS%d GENDER: %s\n", fCnt, str);
-                                                                                                                break;
-                                                                                                case 4:
-                                                                                                                printf("FRIENDS%d AGE: %s\n", fCnt, str);
-                                                                                                                FRS=0;
-                                                                                                                break;
+                                                                                               case 1:
+                                                                                               printf("FRIENDS%d ID: %s\n", ++fCnt, str);
+                                                                                               break;
+                                                                                               case 2:
+                                                                                               printf("FRIENDS%d NAME: %s\n", fCnt, str);
+                                                                                               break;
+                                                                                               case 3:
+                                                                                               printf("FRIENDS%d GENDER: %s\n", fCnt, str);
+                                                                                               break;
+                                                                                               case 4:
+                                                                                               printf("FRIENDS%d AGE: %s\n", fCnt, str);
+                                                                                               FRS=0;
+                                                                                               break;
                                                                                 }
                                                                                 clearStr(str);
+                                                                                index=0;
                                                                 }
                                                                 else if(FRS==5&&strcmp(str,"~")!=0){
                                                                                 printf("%s\n", str);
