@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-char* encodedFilename;
+FILE* encodedFilename;
 
 typedef struct{
                 FILE* fp;
@@ -120,124 +120,142 @@ void readAll(FileData* fd){
                 int index=0;
                 int RealFirst=1;
                 int fCnt=0;
+                char descTxt[100][1000];
+                int descIndex=0;
 
                 //strcpy(str,clearStr(str));
                 for(int i=0;i<256;i++) str[i]=0;
 
-                printf("*USER STATUS*\n");
+                fprintf(encodedFilename,"*USER STATUS*\n");
                 for(int i=0;i < fd->maxCol;i++){
                                 for(int j=0;j<16;j++){
-                                                if(fd->all[i][j]!='/'){str[index++]=fd->all[i][j];\
-                                                                printf("%s\n", str);}
-
-                                                if(fd->all[i][j]=='/'){
+                                                if(fd->all[i][j]!=-1){str[index++]=fd->all[i][j];\
+                                                                //printf("%s\n", str);
+                                                }
+                                                if(fd->all[i][j]==-1){
                                                                 if(USS<=7){
                                                                                 switch(USS){
-                                                                                          case 1 :
-                                                                                          printf("ID: %s\n", str);
-                                                                                          break;
-                                                                                          case 2:
-                                                                                          printf("NAME: %s\n", str);
-                                                                                          break;
-                                                                                          case 3:
-                                                                                          printf("GENDER: %s\n", str);
-                                                                                          break;
-                                                                                          case 4:
-                                                                                          printf("AGE: %s\n", str);
-                                                                                          break;
-                                                                                          case 5:
-                                                                                          printf("HP: %s\n", str);
-                                                                                          break;
-                                                                                          case 6:
-                                                                                          printf("MP: %s\n", str);
-                                                                                          break;
-                                                                                          case 7:
-                                                                                          printf("COIN: %s\n", str);
-                                                                                          break;
+                                                                                                case 1 :
+                                                                                                    fprintf(encodedFilename, "ID: %s\n", str);
+                                                                                                    break;
+                                                                                                case 2:
+                                                                                                    fprintf(encodedFilename, "NAME: %s\n", str);
+                                                                                                    break;
+                                                                                                case 3:
+                                                                                                    fprintf(encodedFilename, "GENDER: %s\n", str);
+                                                                                                    break;
+                                                                                                case 4:
+                                                                                                    fprintf(encodedFilename, "AGE: %s\n", str);
+                                                                                                    break;
+                                                                                                case 5:
+                                                                                                    fprintf(encodedFilename, "HP: %s\n", str);
+                                                                                                    break;
+                                                                                                case 6:
+                                                                                                    fprintf(encodedFilename, "MP: %s\n", str);
+                                                                                                    break;
+                                                                                                case 7:
+                                                                                                    fprintf(encodedFilename, "COIN: %s\n", str);
+                                                                                                    break;
                                                                                 }
                                                                                 USS++;
                                                                                 clearStr(str);
                                                                                 index=0;
                                                                 }
                                                                 else if(USS==8&&ITS==0){
-                                                                                printf("\n*ITEMS*\n");
+                                                                                fprintf(encodedFilename, "\n*ITEMS*\n");
                                                                                 ITS++;
                                                                                 int size=strlen(str);
                                                                                 int numCnt=0;
                                                                                 char num[4];
+                                                                                for(int k=0;k<4;k++) num[i]=0;
                                                                                 for(int i=0;i<size;i++){
-                                                                                          if(str[i]>='0'&&str[i]<='9'){
-                                                                                          num[numCnt++]=str[i];
-                                                                                          continue;
-                                                                                          }
-                                                                                          else{
-                                                                                          switch(str[i]){
-                                                                                          case 'A':
-                                                                                          printf("BOMB: %s\n", num);
-                                                                                          numCnt=0;
-                                                                                          break;
-                                                                                          case 'B':
-                                                                                          printf("POTION: %s\n", num);
-                                                                                          numCnt=0;
-                                                                                          break;
-                                                                                          case 'C':
-                                                                                          printf("CURE: %s\n", num);
-                                                                                          numCnt=0;
-                                                                                          break;
-                                                                                          case 'D':
-                                                                                          printf("BOOK: %s\n", num);
-                                                                                          numCnt=0;
-                                                                                          break;
-                                                                                          case 'E':
-                                                                                          printf("SHIELD: %s\n", num);
-                                                                                          numCnt=0;
-                                                                                          break;
-                                                                                          case 'F':
-                                                                                          printf("CANNON: %s\n", num);
-                                                                                          numCnt=0;
-                                                                                          break;
-                                                                                          }
-                                                                                          clearStr(num);
-                                                                                          }
+                                                                                                if(str[i]>='0'&&str[i]<='9'){
+                                                                                                    num[numCnt++]=str[i];
+                                                                                                    //printf("%c\n", str[i]);
+                                                                                                    continue;
+                                                                                                }
+                                                                                                else{
+                                                                                                    switch(str[i]){
+                                                                                                    case 'A':
+                                                                                                    fprintf(encodedFilename, "BOMB: ");
+                                                                                                    for(int i=0;i<numCnt;i++)
+                                                                                                    fprintf(encodedFilename, "%c", num[i]);
+                                                                                                    fprintf(encodedFilename, "\n");
+                                                                                                    numCnt=0;
+                                                                                                    break;
+                                                                                                    case 'B':
+                                                                                                    fprintf(encodedFilename, "POTION: %s\n", num);
+                                                                                                    numCnt=0;
+                                                                                                    break;
+                                                                                                    case 'C':
+                                                                                                    fprintf(encodedFilename, "CURE: %s\n", num);
+                                                                                                    numCnt=0;
+                                                                                                    break;
+                                                                                                    case 'D':
+                                                                                                    fprintf(encodedFilename, "BOOK: %s\n", num);
+                                                                                                    numCnt=0;
+                                                                                                    break;
+                                                                                                    case 'E':
+                                                                                                    fprintf(encodedFilename, "SHIELD: %s\n", num);
+                                                                                                    numCnt=0;
+                                                                                                    break;
+                                                                                                    case 'F':
+                                                                                                    fprintf(encodedFilename, "CANNON: %s\n", num);
+                                                                                                    numCnt=0;
+                                                                                                    break;
+                                                                                                    }
+                                                                                                    for(int i=0;i<4;i++)num[i]='\0';
+                                                                                                }
                                                                                 }
                                                                                 clearStr(str);
                                                                                 index=0;
                                                                 }
                                                                 else if(strcmp(str,"`")==0){
-                                                                        printf("*DESCRIPTION*\n");
-                                                                        FRS=5;
-                                                                        clearStr(str);
-                                                                        index=0;
-                                                                        continue;
+                                                                                fprintf(encodedFilename, "*DESCRIPTION*\n");
+                                                                                FRS=5;
+                                                                                clearStr(str);
+                                                                                index=0;
+                                                                                continue;
                                                                 }
                                                                 else if(ITS==1&&FRS<=4){
                                                                                 FRS++;
                                                                                 if(RealFirst){
-                                                                                          printf("\n*FRIENDS LIST*\n");
-                                                                                          RealFirst=0;
+                                                                                                fprintf(encodedFilename, "\n*FRIENDS LIST*\n");
+                                                                                                RealFirst=0;
                                                                                 }
                                                                                 switch(FRS){
-                                                                                          case 1:
-                                                                                          printf("FRIENDS%d ID: %s\n", ++fCnt, str);
-                                                                                          break;
-                                                                                          case 2:
-                                                                                          printf("FRIENDS%d NAME: %s\n", fCnt, str);
-                                                                                          break;
-                                                                                          case 3:
-                                                                                          printf("FRIENDS%d GENDER: %s\n", fCnt, str);
-                                                                                          break;
-                                                                                          case 4:
-                                                                                          printf("FRIENDS%d AGE: %s\n\n", fCnt, str);
-                                                                                          FRS=0;
-                                                                                          break;
+                                                                                                case 1:
+                                                                                                    fprintf(encodedFilename, "FRIENDS%d ID: %s\n", ++fCnt, str);
+                                                                                                    break;
+                                                                                                case 2:
+                                                                                                    fprintf(encodedFilename, "FRIENDS%d NAME: %s\n", fCnt, str);
+                                                                                                    break;
+                                                                                                case 3:
+                                                                                                    fprintf(encodedFilename, "FRIENDS%d GENDER: %s\n", fCnt, str);
+                                                                                                    break;
+                                                                                                case 4:
+                                                                                                    fprintf(encodedFilename,"FRIENDS%d AGE: %s\n\n", fCnt, str);
+                                                                                                    FRS=0;
+                                                                                                    break;
                                                                                 }
                                                                                 clearStr(str);
                                                                                 index=0;
                                                                                 continue;
                                                                 }
                                                                 else if(FRS==5&&strcmp(str,"~")!=0){
-                                                                                printf("%s\n", str);
-                                                                                for(int i=0;i<256;i++) str[i]=0;
+                                                                                if(str[1]=='?'){
+                                                                                                int num2 = 0;
+                                                                                                for (int i=2; i < strlen(str); i++) {
+                                                                                                    num2 = (num2 * 10) + str[i] - '0';
+                                                                                                }
+                                                                                                fprintf(encodedFilename, "%s\n", descTxt[num2-1]);
+                                                                                }
+                                                                                else{
+                                                                                                fprintf(encodedFilename,"%s\n", str);
+                                                                                                strcpy(descTxt[descIndex++], str);
+                                                                                }
+                                                                                clearStr(str);
+                                                                                //for(int i=0;i<256;i++) str[i]=0;
                                                                                 index=0;
                                                                 }
                                                 }
@@ -249,7 +267,7 @@ void readAll(FileData* fd){
 }
 int main(int argc, char* argv[]) {
                 char* filename = argv[1];
-                encodedFilename = argv[2];
+    encodedFilename = fopen(argv[2], "wt");
 
                 FileData* fd = (FileData*)malloc(sizeof(FileData));
                 fd->fp = fopen(filename, "rb");
