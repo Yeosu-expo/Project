@@ -110,7 +110,7 @@ void clearStr(char str[]){
 }
 
 void readAll(FileData* fd){
-                int USS=0;//max=7
+                int USS=1;//max=7
                 int ITS=0;//max=1
                 int FRS=0;//max=4 백틱 없으면 초기화
                 // int DSS;
@@ -119,6 +119,7 @@ void readAll(FileData* fd){
                 int index=0;
                 int RealFirst=1;
                 int fCnt=0;
+                clearStr(str);
 
                 printf("*USER STATUS*\n");
                 for(int i=0;i < fd->maxCol;i++){
@@ -126,7 +127,6 @@ void readAll(FileData* fd){
                                                 if(fd->all[i][j]!='/') str[index++]=fd->all[i][j];
                                                 if(fd->all[i][j]=='/'){
                                                                 if(USS<=7){
-                                                                                USS++;
                                                                                 switch(USS){
                                                                                                case 1 :
                                                                                                printf("ID: %s\n", str);
@@ -150,6 +150,7 @@ void readAll(FileData* fd){
                                                                                                printf("COIN: %s\n", str);
                                                                                                break;
                                                                                 }
+                                                                                USS++;
                                                                                 clearStr(str);
                                                                                 index=0;
                                                                 }
@@ -157,8 +158,9 @@ void readAll(FileData* fd){
                                                                                 printf("*ITEMS*\n");
                                                                                 ITS++;
                                                                                 int size=strlen(str);
+                                                                                int numCnt=0;
+                                                                                char num[4];
                                                                                 for(int i=0;i<size;i++){
-                                                                                               char num[4]; int numCnt=0;
                                                                                                if(str[i]>='0'&&str[i]<='9'){
                                                                                                num[numCnt++]=str[i];
                                                                                                continue;
@@ -167,21 +169,27 @@ void readAll(FileData* fd){
                                                                                                switch(str[i]){
                                                                                                case 'A':
                                                                                                printf("BOMB: %s\n", num);
+                                                                                               numCnt=0;
                                                                                                break;
                                                                                                case 'B':
                                                                                                printf("POTION: %s\n", num);
+                                                                                               numCnt=0;
                                                                                                break;
                                                                                                case 'C':
                                                                                                printf("CURE: %s\n", num);
+                                                                                               numCnt=0;
                                                                                                break;
                                                                                                case 'D':
                                                                                                printf("BOOK: %s\n", num);
+                                                                                               numCnt=0;
                                                                                                break;
                                                                                                case 'E':
                                                                                                printf("SHIELD: %s\n", num);
+                                                                                               numCnt=0;
                                                                                                break;
                                                                                                case 'F':
                                                                                                printf("CANNON: %s\n", num);
+                                                                                               numCnt=0;
                                                                                                break;
                                                                                                }
                                                                                                clearStr(num);
@@ -221,6 +229,8 @@ void readAll(FileData* fd){
                                                                 }
                                                                 else if(FRS==5&&strcmp(str,"~")!=0){
                                                                                 printf("%s\n", str);
+                                                                                clearStr(str);
+                                                                                index=0;
                                                                 }
                                                 }
 
