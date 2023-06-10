@@ -215,7 +215,7 @@ int desc(FileData* fd)
 
     char* lines[1000];  //라인전체가 반복되었는지 확인하기 위해 라인별로 저장하는 문자열 배열
     char* comp[1000];           //압축된 디스크립션 내용을 담는 배열
-    char buffer[300];           //파일에서 한 라인을 저장하는 변수
+    char buffer[1000];           //파일에서 한 라인을 저장하는 변수
     int compCnt = 0;            //comp배열에 index를 세어주는 변수
     int count = 0;                      //라인전체 반복을 체크하기 위해 읽은 라인 수에 맞게 올라가는 변수
     int flag = 0;                               //라인 전체가 반복되었는지 체크하는 변수
@@ -232,7 +232,7 @@ int desc(FileData* fd)
             }
         }
         if (flag == 0){ //라인 전체가 반복되지 않은 경우
-            lines[count] = (char*)malloc(sizeof(char) * 300);
+            lines[count] = (char*)malloc(sizeof(char) * 1000);
             strcpy(lines[count], buffer);
             comp[compCnt] = (char*)malloc(sizeof(char) * (strlen(buffer) + 2));
             sprintf(comp[compCnt], "%s%s", buffer, &ch);
